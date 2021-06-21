@@ -14,13 +14,14 @@ def assemble(pdb_id):
     struct = PDB(
         os.path.join(masif_opts["raw_pdb_dir"], "{}.pdb".format(pdb_id)), header=True
     )
-    try:
-        struct_assembly = struct.apply_biomolecule_matrices()[0]
-    except:
-        return 0
-    struct_assembly.write(
-        os.path.join(masif_opts["ligand"]["assembly_dir"], "{}.pdb".format(pdb_id))
-    )
+
+    print(type(struct))
+    struct_assembly = struct.apply_biomolecule_matrices()
+    wPath = os.path.join(masif_opts["ligand"]["assembly_dir"], "{}.pdb".format(pdb_id))
+    if os.path.exists(wPath):
+        print('Overwritting '+wPath)
+        os.remove(wPath)
+    struct_assembly[0].write(wPath)
     return 1
 
 

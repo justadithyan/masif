@@ -8,6 +8,30 @@ This file is part of MaSIF.
 Released under an Apache License 2.0
 """
 
+def output_sdf_as_xyzrn(sdfFilename, xyzrnfilename):
+    f = open(xyzrnfilename, 'w')
+    start=False
+    with open(sdfFilename) as filex:
+        for line in filex:
+            if start:
+                i+=1
+                if i<=nAtoms:
+                    l = line.split()
+                    tow = '{} {} {} {} {} [UNK].{}#{}\n'.\
+                        format(l[0], l[1], l[2], radii[l[3]], 1, l[3]+str(i), i)
+                    f.write(tow)
+                else:
+                    break
+            else:
+                try:
+                    nAtoms = int(line.split()[0])
+                    start = True
+                    i=0
+                    f.write('{}\n{}\n'.format(nAtoms, sdfFilename))
+                except:
+                    pass
+    f.close()
+
 def output_pdb_as_xyzrn(pdbfilename, xyzrnfilename):
     """
         pdbfilename: input pdb filename

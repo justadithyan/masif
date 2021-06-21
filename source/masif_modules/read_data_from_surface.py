@@ -47,21 +47,21 @@ def read_data_from_surface(ply_fn, params):
     si = np.arctan(si)*(2/np.pi)
 
     # Normalize the charge.
-    charge = mesh.get_attribute("vertex_charge")
-    charge = normalize_electrostatics(charge)
+    #charge = mesh.get_attribute("vertex_charge")
+    #charge = normalize_electrostatics(charge)
 
     # Hbond features
-    hbond = mesh.get_attribute("vertex_hbond")
+    #hbond = mesh.get_attribute("vertex_hbond")
 
     # Hydropathy features
     # Normalize hydropathy by dividing by 4.5
-    hphob = mesh.get_attribute("vertex_hphob")/4.5
+    #hphob = mesh.get_attribute("vertex_hphob")/4.5
 
     # Iface labels (for ground truth only)     
     if "vertex_iface" in mesh.get_attribute_names():
         iface_labels = mesh.get_attribute("vertex_iface") 
     else:
-        iface_labels = np.zeros_like(hphob)
+        iface_labels = np.zeros_like(si)
 
     # n: number of patches, equal to the number of vertices.
     n = len(mesh.vertices)
@@ -83,9 +83,9 @@ def read_data_from_surface(ply_fn, params):
         
         input_feat[vix, :len(neigh_vix), 0] = si[neigh_vix]
         input_feat[vix, :len(neigh_vix), 1] = ddc
-        input_feat[vix, :len(neigh_vix), 2] = hbond[neigh_vix]
-        input_feat[vix, :len(neigh_vix), 3] = charge[neigh_vix]
-        input_feat[vix, :len(neigh_vix), 4] = hphob[neigh_vix]
+        #input_feat[vix, :len(neigh_vix), 2] = hbond[neigh_vix]
+        #input_feat[vix, :len(neigh_vix), 3] = charge[neigh_vix]
+        #input_feat[vix, :len(neigh_vix), 4] = hphob[neigh_vix]
         
     return input_feat, rho, theta, mask, neigh_indices, iface_labels, np.copy(mesh.vertices)
 

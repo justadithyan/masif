@@ -13,6 +13,7 @@ radii["C"] = "1.740000"
 radii["H"] = "1.200000"
 radii["S"] = "1.800000"
 radii["P"] = "1.800000"
+radii['Cl'] = '1.75'
 radii["Z"] = "1.39"
 radii["X"] = "0.770000"  ## Radii of CB or CA in disembodied case.
 # This  polar hydrogen's names correspond to that of the program Reduce. 

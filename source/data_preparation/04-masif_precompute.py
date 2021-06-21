@@ -1,3 +1,4 @@
+import pymesh
 import sys
 import time
 import os
@@ -15,7 +16,8 @@ np.random.seed(0)
 # Load training data (From many files)
 from masif_modules.read_data_from_surface import read_data_from_surface, compute_shape_complementarity
 
-print(sys.argv[2])
+if len(sys.argv) >2:
+    print(sys.argv[2])
 
 if len(sys.argv) <= 1:
     print("Usage: {config} "+sys.argv[0]+" {masif_ppi_search | masif_site} PDBID_A")
@@ -71,11 +73,15 @@ for ppi_pair_id in ppi_pair_list:
     verts = {}
 
     for pid in pids:
-        input_feat[pid], rho[pid], theta[pid], mask[pid], neigh_indices[pid], iface_labels[pid], verts[pid] = read_data_from_surface(ply_file[pid], params)
+        #Decompose into patches
+        input_feat[pid], rho[pid], theta[pid], mask[pid], neigh_indices[pid], iface_labels[pid], verts[pid] = \
+            read_data_from_surface(ply_file[pid], params)
 
     if len(pids) > 1 and masif_app == 'masif_ppi_search':
         start_time = time.time()
-        p1_sc_labels, p2_sc_labels = compute_shape_complementarity(ply_file['p1'], ply_file['p2'], neigh_indices['p1'],neigh_indices['p2'], rho['p1'], rho['p2'], mask['p1'], mask['p2'], params)
+        p1_sc_labels, p2_sc_labels = compute_shape_complementarity(ply_file['p1'], ply_file['p2'], neigh_indices['p1'],
+                                                                   neigh_indices['p2'], rho['p1'], rho['p2'],
+                                                                   mask['p1'], mask['p2'], params)
         np.save(my_precomp_dir+'p1_sc_labels', p1_sc_labels)
         np.save(my_precomp_dir+'p2_sc_labels', p2_sc_labels)
         end_time = time.time()

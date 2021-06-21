@@ -27,6 +27,7 @@ def computeAPBS(vertices, pdb_file, tmp_file_base):
         "--whitespace",
         "--noopt",
         "--apbs-input",
+        "--ligands",
         pdbname,
         filename_base,
     ]
@@ -61,7 +62,7 @@ def computeAPBS(vertices, pdb_file, tmp_file_base):
     os.remove(remove_fn)
     os.remove(remove_fn+'.csv')
     os.remove(remove_fn+'.dx')
-    os.remove(remove_fn+'.in')
+    #os.remove(remove_fn+'.in')
     os.remove(remove_fn+'-input.p')
     os.remove(remove_fn+'_out.csv')
 
