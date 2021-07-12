@@ -136,4 +136,5 @@ if not os.path.exists(masif_opts['pdb_chain_dir']):
     os.makedirs(masif_opts['pdb_chain_dir'])
 shutil.copy(out_filename1+'.ply', masif_opts['ply_chain_dir']) 
 shutil.copy(out_filename1+'.pdb', masif_opts['pdb_chain_dir'])
+shutil.copy(out_filename1+'_indices.txt', masif_opts['res_index_dir'])
 
