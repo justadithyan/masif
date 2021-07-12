@@ -76,15 +76,30 @@ vertex_normal = compute_normal(regular_mesh.vertices, regular_mesh.faces)
 # neighbor)
 
 if masif_opts['use_hbond']:
-    vertex_hbond = assignChargesToNewMesh(regular_mesh.vertices, vertices1,\
+    vertex_hbond, disx, indx = assignChargesToNewMesh(regular_mesh.vertices, vertices1,\
         vertex_hbond, masif_opts)
 
 if masif_opts['use_hphob']:
-    vertex_hphobicity = assignChargesToNewMesh(regular_mesh.vertices, vertices1,\
+    vertex_hphobicity, disx, indx = assignChargesToNewMesh(regular_mesh.vertices, vertices1,\
         vertex_hphobicity, masif_opts)
 
 if masif_opts['use_apbs']:
     vertex_charges = computeAPBS(regular_mesh.vertices, out_filename1+".pdb", out_filename1)
+    
+#generates vertex-residue mapping - currently maps vertex to closest residue 
+req_residues = [names1[g] for g in indx[:, 0]] #returns list of atoms corresponding to vertex
+vertex_to_residue_dict = {}
+
+for w in range(len(req_residues)):
+    term_split = req_residues[w].split("_")
+    res_no = int(term_split[1])
+    res_type = term_split[3]
+    atom_type = term_split[4]
+    
+    vertex_to_residue_dict[w] = [res_no, res_type, atom_type]
+    
+with open(out_filename1 + '_indices.txt', 'w') as dictfile:
+    dictfile.write(str(vertex_to_residue_dict))
 
 iface = np.zeros(len(regular_mesh.vertices))
 if 'compute_iface' in masif_opts and masif_opts['compute_iface']:
@@ -120,4 +135,5 @@ if not os.path.exists(masif_opts['ply_chain_dir']):
 if not os.path.exists(masif_opts['pdb_chain_dir']):
     os.makedirs(masif_opts['pdb_chain_dir'])
 shutil.copy(out_filename1+'.ply', masif_opts['ply_chain_dir']) 
-shutil.copy(out_filename1+'.pdb', masif_opts['pdb_chain_dir']) 
+shutil.copy(out_filename1+'.pdb', masif_opts['pdb_chain_dir'])
+
