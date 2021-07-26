@@ -6,6 +6,8 @@ masif_opts["raw_pdb_dir"] = "data_preparation/00-raw_pdbs/"
 masif_opts["pdb_chain_dir"] = "data_preparation/01-benchmark_pdbs/"
 masif_opts["ply_chain_dir"] = "data_preparation/01-benchmark_surfaces/"
 masif_opts["res_index_dir"] = "data_preparation/01-benchmark_index_dicts/"
+masif_opts["pdb_seq_dir"] = "data_preparation/01-benchmark_sequences/"
+masif_opts["pssm_chain_dir"] = "data_preparation/01-benchmark_pssm/"
 masif_opts["tmp_dir"] = tempfile.gettempdir()
 masif_opts["ply_file_template"] = masif_opts["ply_chain_dir"] + "/{}_{}.ply"
 
