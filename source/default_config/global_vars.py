@@ -34,6 +34,20 @@ if 'MULTIVALUE_BIN' in os.environ:
 else:
   print("ERROR: MULTIVALUE_BIN not set. Variable should point to MULTIVALUE program.")
   sys.exit(1)
+  
+blast_bin=""
+if 'BLAST_BIN' in os.environ:
+   blast_bin = os.environ['BLAST_BIN']
+else:
+   print("ERROR: BLAST_BIN not set. Variable should point to PSIBLAST program.")
+   sys.exit(1)
+   
+db_loc=""
+if 'DB_PATH' in os.environ:
+   db_loc = os.environ['DB_PATH']
+else:
+   print("ERROR: DB_PATH not set. Variable should point to BLASTDB location.")
+   sys.exit(1)
 
 
 class NoSolutionError(Exception):
