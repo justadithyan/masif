@@ -21,6 +21,7 @@ from triangulation.computeHydrophobicity import computeHydrophobicity
 from triangulation.computeCharges import computeCharges, assignChargesToNewMesh
 from triangulation.computeAPBS import computeAPBS
 from triangulation.compute_normal import compute_normal
+from evolutionary.computeEvo import computePSSM
 from sklearn.neighbors import KDTree
 
 if len(sys.argv) <= 1: 
@@ -45,6 +46,14 @@ pdb_filename = protonated_file
 
 # Extract chains of interest.
 out_filename1 = tmp_dir+"/"+pdb_id+"_"+chain_ids1
+
+#Extract sequences of the chains
+chainlist = list(chain_ids1)
+for record in SeqIO.parse(pdb_filename, "pdb-seqres"):
+    if record.id[5] in chainlist:
+       with open(out_filename1 + '_' + record.id[5] + '.fa', 'w') as seq_file:
+          seq_file.write(str(record.seq))
+            
 extractPDB(pdb_filename, out_filename1+".pdb", chain_ids1)
 
 # Compute MSMS of surface w/hydrogens, 
@@ -85,6 +94,10 @@ if masif_opts['use_hphob']:
 
 if masif_opts['use_apbs']:
     vertex_charges = computeAPBS(regular_mesh.vertices, out_filename1+".pdb", out_filename1)
+
+#computes PSSMs for all the chains
+for i in chainlist:
+    value = computePSSM(pdb_id+'_' + chain_ids1 + '_' + i + '.fa', out_filename1)    
     
 #generates vertex-residue mapping - currently maps vertex to closest residue 
 req_residues = [names1[g] for g in indx[:, 0]] #returns list of atoms corresponding to vertex
@@ -130,11 +143,26 @@ else:
     save_ply(out_filename1+".ply", regular_mesh.vertices,\
                         regular_mesh.faces, normals=vertex_normal, charges=vertex_charges,\
                         normalize_charges=True, hbond=vertex_hbond, hphob=vertex_hphobicity)
+    
 if not os.path.exists(masif_opts['ply_chain_dir']):
     os.makedirs(masif_opts['ply_chain_dir'])
 if not os.path.exists(masif_opts['pdb_chain_dir']):
     os.makedirs(masif_opts['pdb_chain_dir'])
+if not os.path.exists(masif_opts['res_index_dir']):
+    os.makedirs(masif_opts['res_index_dir'])
+if not os.path.exists(masif_opts["pdb_seq_dir"]):
+    os.makedirs(masif_opts["pdb_seq_dir"])
+if not os.path.exists(masif_opts["pssm_chain_dir"]):
+    os.makedirs(masif_opts["pssm_chain_dir"])
+    
 shutil.copy(out_filename1+'.ply', masif_opts['ply_chain_dir']) 
 shutil.copy(out_filename1+'.pdb', masif_opts['pdb_chain_dir'])
 shutil.copy(out_filename1+'_indices.txt', masif_opts['res_index_dir'])
+
+for i in chainlist:
+   shutil.copy(out_filename1+'_' + i + '.fa', masif_opts['pdb_seq_dir'])
+ 
+for i in chainlist:  
+   shutil.copy(out_filename1+'_' + i + '.pssm', masif_opts["pssm_chain_dir"])
+
 
